@@ -256,12 +256,12 @@ class VPP_Policy(pl.LightningModule):
 
         predictive_feature, latent_goal= self.extract_predictive_feature(dataset_batch)
 
-        act_loss, sigmas, noise = self.diffusion_loss(
+        target, model_output = self.diffusion_loss(
             predictive_feature,
             latent_goal,
             dataset_batch["actions"],
         )
-
+        act_loss = (model_output - target).pow(2).flatten(1).mean()
         action_loss += act_loss
         total_loss += act_loss
 

@@ -73,13 +73,14 @@ class GCDenoiser(nn.Module):
             sigma: The input sigma.
             **kwargs: Additional keyword arguments.
         Returns:
-            The computed loss.
+            The target and model_output. Note that the loss will be calculated outside
+            of this function to provide more flexibility in customization.
         """
         c_skip, c_out, c_in = [append_dims(x, action.ndim) for x in self.get_scalings(sigma)]
         noised_input = action + noise * append_dims(sigma, action.ndim)
         model_output = self.inner_model(state, noised_input * c_in, goal, sigma, **kwargs)
         target = (action - c_skip * noised_input) / c_out
-        return (model_output - target).pow(2).flatten(1).mean(), model_output
+        return target, model_output
 
     def forward(self, state, action, goal, sigma, **kwargs):
         """

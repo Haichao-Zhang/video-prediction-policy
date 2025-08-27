@@ -258,7 +258,7 @@ class VPP_Policy(nn.Module):#pl.LightningModule):
             latent_goal,
             dataset_batch["actions"],
         )
-        act_loss = (model_output - target).pow(2).flatten(1).mean(),
+        act_loss = (model_output - target).pow(2).flatten(1).mean()
 
         action_loss += act_loss
         total_loss += act_loss
